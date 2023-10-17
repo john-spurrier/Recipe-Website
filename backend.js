@@ -1,12 +1,11 @@
-/*const fs = require('fs');
+//code sampled from oracle tutorials: https://www.oracle.com/database/technologies/appdev/quickstartnodeonprem.html
 
-const sqlTemplate = fs.readFileSync('Queries.sql', 'utf8');
-
-const userInput =   'SELECT *   FROM RECIPES    WHERE INGREDIENTS = \'%chicken%\' || \'olive oil\' || \'celery\''; // Retrieve this from user input
-
-fs.writeFileSync('Queries.sql', userInput);
-*/
 const oracledb = require('oracledb');
+const express = require('express');
+
+const app = express();
+const PORT = 3000;
+
 
 async function fetchDataFromRecipesTable() {
   let connection;
@@ -18,18 +17,22 @@ async function fetchDataFromRecipesTable() {
       });
     console.log("Successfully connected to Oracle Database");
 
+    // Express listening for queries from frontend
+    app.listen(PORT, ()=>{
+      console.log("Server is Listening on Port ", PORT);
+  })
     // Now query the rows from the RECIPES table
-    const query = `SELECT * FROM RECIPES WHERE NAME LIKE '%cream of spinach soup%'`;
+    const query = `SELECT * FROM RECIPES WHERE INGREDIENTS LIKE '%chicken%'`;
     const result = await connection.execute(query);
 
-    // Store the result data in a variable
+    // Store the result data
     const data = result.rows;
 
     return data;
 
   } catch (err) {
     console.error(err);
-    throw err; // You can choose to throw the error or handle it differently
+    throw err; 
   } finally {
     if (connection) {
       try {
@@ -44,8 +47,9 @@ async function fetchDataFromRecipesTable() {
 async function main() {
   try {
     const recipesData = await fetchDataFromRecipesTable();
-    console.log("RECIPE: ", recipesData[0].at(0));
-    console.log("Ingredients List: ", recipesData[0].at(8));
+    /*console.log("RECIPE: ", recipesData[0].at(0));
+    console.log("Ingredients List: ", recipesData[0].at(8));*/
+    console.log(recipesData);
 
     // Here, you can process the recipesData variable as needed.
     // You can return it from your API endpoint or perform other operations.

@@ -1,0 +1,2 @@
+/* Need this in order to connect to Oracle DB and run queries in backend.js */
+npm install oracledb

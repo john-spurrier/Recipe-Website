@@ -3,7 +3,8 @@
 const oracledb = require('oracledb');
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const cors = require("cors");
+const PORT = 3001;
 
 // currently only implemented for searching by ingredients
 function createQuery(ingredientsArray) {
@@ -53,6 +54,40 @@ async function processQuery() {
   }
 }
 
+async function processQuery(ingredients) {
+  let connection;
+  try {
+    connection = await oracledb.getConnection({
+        user: "Jordan.Insinger",
+        password: "EncrFhPKjcpPV45gvRgvCvBi",
+        connectionString: "(DESCRIPTION =(ADDRESS = (PROTOCOL = TCP)(HOST = oracle.cise.ufl.edu)(PORT = 1521))(CONNECT_DATA =(SID= orcl)))"
+      });
+    console.log("Successfully connected to Oracle Database");
+
+    // SAMPLE HARDCODED QUERY
+    //arr = ['orange', 'celery'];
+    const query = createQuery(ingredients);
+    const result = await connection.execute(query);
+
+    // CAPTURE RESULTS
+    const data = result.rows;
+
+    return data;
+
+  } catch (err) {
+    console.error(err);
+    throw err; 
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+}
+
 async function main() {
   // Express listening for queries from frontend
   app.listen(PORT, ()=>{
@@ -60,19 +95,20 @@ async function main() {
   })
 
   app.use(express.json());
+  app.use(cors());
 
   app.post('/api/query', (req, res) => {
-      const ingredients = req.body.ingredients;
-
+      const ingredients = req.body;
       const results = processQuery(ingredients);
       
       // THIS IS WHERE THE TABLE IS BEING SENT TO CLIENT SIDE
       res.json(results);
+      console.log(results);
   })
   
 
 //==================== For manual Testing ========================//
-  try {
+  /*try {
     const recipesData = await processQuery();
     console.log(recipesData);
 
@@ -81,7 +117,7 @@ async function main() {
 
   } catch (err) {
     console.error("An error occurred:", err);
-    }
+    }*/
 
 }
 main();

@@ -54,6 +54,7 @@ async function processQuery() {
   }
 }
 
+// testing connection from frontend to backend
 async function processQuery(ingredients) {
   let connection;
   try {
@@ -106,6 +107,7 @@ async function main() {
       console.log(results);
   })
   
+// Commented out for testing
 
 //==================== For manual Testing ========================//
   /*try {

@@ -8,6 +8,7 @@ const PORT = 3001;
 
 // currently only implemented for searching by ingredients
 function createQuery(ingredientsArray) {
+  console.log("Entering createQuery()");
   let Query = 'SELECT * FROM RECIPES WHERE INGREDIENTS LIKE ';
   Query = Query.concat('\'%', ingredientsArray[0], '%\'');
 
@@ -56,6 +57,7 @@ async function processQuery() {
 
 // testing connection from frontend to backend
 async function processQuery(ingredients) {
+  console.log("Entering processQuery: ", ingredients);
   let connection;
   try {
     connection = await oracledb.getConnection({
@@ -68,11 +70,11 @@ async function processQuery(ingredients) {
     // SAMPLE HARDCODED QUERY
     //arr = ['orange', 'celery'];
     const query = createQuery(ingredients);
+    console.log("QUERY: ", query);
     const result = await connection.execute(query);
 
     // CAPTURE RESULTS
     const data = result.rows;
-
     return data;
 
   } catch (err) {
@@ -98,13 +100,13 @@ async function main() {
   app.use(express.json());
   app.use(cors());
 
-  app.post('/api/query', (req, res) => {
+  app.post('/api/query', async (req, res) => {
       const ingredients = req.body;
-      const results = processQuery(ingredients);
+      const results = await processQuery(ingredients);
+      console.log("RESULTS: ", results);
       
       // THIS IS WHERE THE TABLE IS BEING SENT TO CLIENT SIDE
       res.json(results);
-      console.log(results);
   })
   
 // Commented out for testing

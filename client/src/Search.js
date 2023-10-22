@@ -7,19 +7,16 @@ function Search() {
   const [ingredients, setingredients] = useState(['orange', 'celery']);
 
   const handleSearch = async () => {
+    console.log("ENTERING HANDLESEARCH()");
     // Implement your search logic here
-    console.log(ingredients);
     try{
-      const response = await axios.post('http://localhost:3001/api/query', ingredients);
+      const response = await axios.post('http://localhost:3001/api/query', ['orange', 'celery']);
 
       setResults(response.data);
 
     } catch(error){
       console.error(error);
     }
-
-    console.log(results);
-
   }
 
   return (

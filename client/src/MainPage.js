@@ -1,12 +1,18 @@
+// MainPage.js
 import React from 'react';
-import Search from './Search';
+import Search from './Search'
+import { Link } from 'react-router-dom';
+import './styles.css';
 
-function MainPage() {
+const MainPage = () => {
   return (
-    <div>
-      <Search />
+    <div className="container">
+      <Link to="/saved" className="saved-button">
+        Go to Saved
+      </Link>
+      {<Search />}
     </div>
   );
-}
+};
 
 export default MainPage;

@@ -1,35 +1,36 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import './styles.css';
 
 function Search() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [results, setResults] = useState([]);
-  const [ingredients, setingredients] = useState(['orange', 'celery']);
-  const itemsPerPage = 10;
-  const [currentPage,setCurrentPage] = useState(1);
+  const [results] = useState([]);
+  const [filters, setFilters] = useState({
+    glutenFree: false,
+    keto: false,
+    nutAllergy: false,
+  });
+
+  const toggleFilter = (filter) => {
+    setFilters({
+      ...filters,
+      [filter]: !filters[filter],
+    });
+  };
 
   const handleSearch = async () => {
-    console.log("ENTERING HANDLESEARCH()");
     // Implement your search logic here
-    try{
-      const response = await axios.post('http://localhost:3001/api/query', ingredients);
-
-      setResults(response.data);
-      console.log(results);
-    } catch(error){
-      console.error(error);
-    }
   }
+  const handleGFClick = () => {
+    // Implement functionality for Gluten-Free filter
+  };
 
-  // code for splitting the array up into pages that contain 10 items per page
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = results.slice(startIndex,endIndex);
-  const totalpages = Math.ceil(results.length / itemsPerPage);
+  const handleKetoClick = () => {
+    // Implement functionality for Keto filter
+  };
 
-  const goToPage = (page) => {
-    setCurrentPage(page);
-  }
+  const handleNutAllergyClick = () => {
+    // Implement functionality for Nut Allergy filter
+  };
 
   return (
     <div>
@@ -41,39 +42,35 @@ function Search() {
         placeholder="Search..."
       />
       <button onClick={handleSearch}>Search</button>
-
-      {results.length > 0 && (
-        <div>
-        <ul>
-          {currentItems.map((item,index) => (
-            <li key = {index} className = "smallText"> 
-              {item[0]} - {item[7]} 
-            </li>
-          ))}
-        </ul>
-
-        <div>
-          <button onClick={() => goToPage(currentPage - 1)} disabled = {currentPage === 1}>
-            Previous
-          </button>
-          <span>Page {currentPage} of {totalpages} </span>
-          <button onClick = {() => goToPage(currentPage + 1)} disabled = {currentPage === totalpages}>
-            Next
-          </button>
-        </div>
-        </div>
-      )}
-    </div>
-  );
-}
-/*
-deleted code from line 36 for testing purposes, can replace later
-<div className="search-results">
+      <div className="filters">
+        <button
+          onClick={() => toggleFilter('glutenFree')}
+          className={filters.glutenFree ? 'filter-button active' : 'filter-button'}
+        >
+          GF
+        </button>
+        <button
+          onClick={() => toggleFilter('keto')}
+          className={filters.keto ? 'filter-button active' : 'filter-button'}
+        >
+          Keto
+        </button>
+        <button
+          onClick={() => toggleFilter('nutAllergy')}
+          className={filters.nutAllergy ? 'filter-button active' : 'filter-button'}
+        >
+          Nut Allergy
+        </button>
+      </div>
+      <div className="search-results">
         {results.map((result) => (
           <div key={result.id} className="result-item">
             {result.name}
           </div>
         ))}
-      </div>*/
+      </div>
+    </div>
+  );
+}
 
 export default Search;

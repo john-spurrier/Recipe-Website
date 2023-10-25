@@ -1,0 +1,80 @@
+/* Styles for filter buttons */
+.filter-button {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px 15px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  /* Styles for active (pressed) filter buttons */
+  .filter-button.active {
+    background-color: #007bff; /* Change to your desired active color */
+    color: #fff; /* Change to your desired text color for active state */
+    border: 1px solid #007bff; /* Change to your desired border color for active state */
+  }
+/* Center the container */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh; /* 100% of the viewport height */
+  }
+  
+  /* Style the title */
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  /* Style the search input and button */
+  input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  /* Style the search results container */
+  .search-results {
+    margin-top: 20px;
+  }
+  
+  .result-item {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .saved-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px;
+    cursor: pointer;
+  
+    /* Position the button in the top right corner */
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }

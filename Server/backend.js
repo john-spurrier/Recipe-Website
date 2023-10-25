@@ -7,16 +7,46 @@ const cors = require("cors");
 const PORT = 3001;
 
 // currently only implemented for searching by ingredients
-function createQuery(ingredientsArray) {
-  console.log("Entering createQuery()");
-  let Query = 'SELECT * FROM RECIPES WHERE INGREDIENTS LIKE ';
-  Query = Query.concat('\'%', ingredientsArray[0], '%\'');
+function createQuery(ingredientsArray, allergenFilters) {
+  // Allergen Definitions
+  const GF = ["bread", "wheat", "pasta", "cracker", "barley", "oats", "couscous", "rye", "triticale", "malt"];
+  const NUT = ["nut"];
+  const KET = ["chicken"]; //temporary value for testing functionality
 
-  if(ingredientsArray.length > 1) {
-    for(i = 1; i < ingredientsArray.length; i++) {
-      Query = Query.concat(' OR INGREDIENTS LIKE \'%', ingredientsArray[i], '%\'');
+
+  console.log("Creating Query...");
+  const {glutenFree, keto, nutAllergy} = allergenFilters;
+  console.log("Gluten Free: ", glutenFree, "\t Keto: ", keto, "\t Nut Allergy: ", nutAllergy);
+  let Query = 'SELECT * FROM RECIPES WHERE INGREDIENTS LIKE ';
+
+    for(i = 0; i < ingredientsArray.length; i++) {
+      if(i == 0) { // first query
+        Query = Query.concat('\'%', ingredientsArray[0], '%\'');
+      }
+      else {
+        Query = Query.concat(' AND INGREDIENTS LIKE \'%', ingredientsArray[i], '%\'');
+      }
+      
     }
-}
+    
+    // Allergen Limitations
+    if(glutenFree == true) {
+      for(i = 0; i < GF.length; i++) {
+        Query = Query.concat(' AND INGREDIENTS NOT LIKE \'%', GF[i], '%\'');
+      }
+    }
+    
+    if(nutAllergy == true) {
+      for(i = 0; i < NUT.length; i++) {
+        Query = Query.concat(' AND INGREDIENTS NOT LIKE \'%', NUT[i], '%\'');
+      }
+    }
+
+    if(keto == true) {
+      for(i = 0; i < KET.length; i++) {
+        Query = Query.concat(' AND INGREDIENTS NOT LIKE \'%', KET[i], '%\'');
+      }
+    }
 
   return Query;
 }
@@ -56,7 +86,7 @@ async function processQuery() {
 }
 
 // testing connection from frontend to backend
-async function processQuery(ingredients) {
+async function processQuery(ingredients, filters) {
   console.log("Entering processQuery: ", ingredients);
   let connection;
   try {
@@ -69,7 +99,7 @@ async function processQuery(ingredients) {
 
     // SAMPLE HARDCODED QUERY
     //arr = ['orange', 'celery'];
-    const query = createQuery(ingredients);
+    const query = createQuery(ingredients, filters);
     console.log("QUERY: ", query);
     const result = await connection.execute(query);
 
@@ -101,8 +131,10 @@ async function main() {
   app.use(cors());
 
   app.post('/api/query', async (req, res) => {
-      const ingredients = req.body;
-      const results = await processQuery(ingredients);
+      const {ingredients, filters} = req.body;
+      // Access Filters
+
+      const results = await processQuery(ingredients, filters);
       console.log("RESULTS: ", results);
       
       // THIS IS WHERE THE TABLE IS BEING SENT TO CLIENT SIDE

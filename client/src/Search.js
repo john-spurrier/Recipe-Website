@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Modal from './Modal';
 import './styles.css';
+import './Modal.css';
 
 function Search() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -8,6 +10,7 @@ function Search() {
   const [ingredients, setIngredients] = useState(['orange','celery']);
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [filters, setFilters] = useState({
     glutenFree: false,
     keto: false,
@@ -55,6 +58,14 @@ function Search() {
     setCurrentPage(page);
   }
 
+  const openModal = (item) => {
+    setSelectedItem(item);
+  };
+
+  const closeModal = () => {
+    setSelectedItem(null);
+  };
+
   return (
     <div>
       <h1>EasyCooks</h1>
@@ -87,24 +98,28 @@ function Search() {
       </div>
       {results.length > 0 && (
         <div>
-        <ul>
-          {currentItems.map((item,index) => (
-            <li key = {index} className = "smallText"> 
-              {item[0]} - {item[7]} 
-            </li>
-          ))}
-        </ul>
+          <ul>
+            {currentItems.map((item,index) => (
+              <li key = {index} className = "smallText"> 
+                {item[0]} - {item[7]} 
+                <button onClick = {() => openModal(item)}> Show Details </button>
+              </li>
+            ))}
+          </ul>
 
-        <div>
-          <button onClick={() => goToPage(currentPage - 1)} disabled = {currentPage === 1}>
-            Previous
-          </button>
-          <span>Page {currentPage} of {totalpages} </span>
-          <button onClick = {() => goToPage(currentPage + 1)} disabled = {currentPage === totalpages}>
-            Next
-          </button>
+          <div>
+            <button onClick={() => goToPage(currentPage - 1)} disabled = {currentPage === 1}>
+              Previous
+            </button>
+            <span>Page {currentPage} of {totalpages} </span>
+            <button onClick = {() => goToPage(currentPage + 1)} disabled = {currentPage === totalpages}>
+              Next
+            </button>
+          </div>
         </div>
-        </div>
+      )}
+      {selectedItem && (
+        <Modal item = {selectedItem} onClose={closeModal}/>
       )}
     </div>
   );

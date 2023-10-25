@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './styles.css';
 
 function Search() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [results] = useState([]);
+  const [results, setResults] = useState([]);
+  const [ingredients, setIngredients] = useState(['orange','celery']);
+  const itemsPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState({
     glutenFree: false,
     keto: false,
@@ -18,7 +22,16 @@ function Search() {
   };
 
   const handleSearch = async () => {
+    console.log("ENTERING HANDLESEARCH()");
     // Implement your search logic here
+    try{
+      const response = await axios.post('http://localhost:3001/api/query', ingredients);
+
+      setResults(response.data);
+      console.log(results);
+    } catch(error){
+      console.error(error);
+    }
   }
   const handleGFClick = () => {
     // Implement functionality for Gluten-Free filter
@@ -31,6 +44,16 @@ function Search() {
   const handleNutAllergyClick = () => {
     // Implement functionality for Nut Allergy filter
   };
+
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentItems = results.slice(startIndex,endIndex);
+  const totalpages = Math.ceil(results.length / itemsPerPage);
+
+  const goToPage = (page) => {
+    setCurrentPage(page);
+  }
 
   return (
     <div>
@@ -62,13 +85,27 @@ function Search() {
           Nut Allergy
         </button>
       </div>
-      <div className="search-results">
-        {results.map((result) => (
-          <div key={result.id} className="result-item">
-            {result.name}
-          </div>
-        ))}
-      </div>
+      {results.length > 0 && (
+        <div>
+        <ul>
+          {currentItems.map((item,index) => (
+            <li key = {index} className = "smallText"> 
+              {item[0]} - {item[7]} 
+            </li>
+          ))}
+        </ul>
+
+        <div>
+          <button onClick={() => goToPage(currentPage - 1)} disabled = {currentPage === 1}>
+            Previous
+          </button>
+          <span>Page {currentPage} of {totalpages} </span>
+          <button onClick = {() => goToPage(currentPage + 1)} disabled = {currentPage === totalpages}>
+            Next
+          </button>
+        </div>
+        </div>
+      )}
     </div>
   );
 }

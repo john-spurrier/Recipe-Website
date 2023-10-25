@@ -48,6 +48,19 @@
     height: 100vh; /* 100% of the viewport height */
   }
   
+  .saved-recipe-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .recipe-box {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 5px;
+    width: 550px;
+    text-align: center;
+  }
+
   /* Style the title */
   h1 {
     font-size: 24px;

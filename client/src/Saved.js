@@ -1,21 +1,41 @@
-import React from 'react';
-
+import React, {useEffect, useState} from 'react';
+import Modal from "./Modal";
+import './Modal.css';
 function Saved() {
   // You can fetch the saved recipes or load them from a state or storage
-  const savedRecipes = [
-    { id: 1, name: 'Saved Recipe 1' },
-    { id: 2, name: 'Saved Recipe 2' },
-    // Add more saved recipes here
-  ];
+  const [savedRecipes, setSavedRecipes] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const openModal = (item) => {
+    setSelectedItem(item);
+  }
+
+  const closeModal = (item) => {
+    setSelectedItem(null);
+  }
+
+  useEffect(() => {
+    const options = JSON.parse(sessionStorage.getItem('savedOptions')) || [];
+    setSavedRecipes(options);
+  }, [selectedItem])
 
   return (
     <div className='container'>
       <h1>Saved Recipes</h1>
-      <ul>
-        {savedRecipes.map((recipe) => (
-          <li key={recipe.id}>{recipe.name}</li>
-        ))}
-      </ul>
+      <div className = "saved-recipe-container">
+        <div>
+          {savedRecipes.map((item, index) => (
+            <div key={index} className = "recipe-box">
+              <h3>{item[0]}</h3>
+              <p>{item[7]}</p>
+              <button onClick={() => openModal(item)}>Show Details</button>
+            </div>
+          ))}
+        </div>
+        {selectedItem && (
+          <Modal item = {selectedItem} onClose = {closeModal}/>
+        )}
+      </div>
     </div>
   );
 }

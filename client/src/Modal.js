@@ -5,8 +5,6 @@ const Modal = ({ item, onClose }) => {
 
     const elements = item[6].replace(/^\[|\]$/g, '').split(/', '/);
     const finalElements = elements.map((element) => element.replace(/'/g, ''));
-    console.log(item[6]);
-
   return (
     <div className="modal-overlay">
       <div className="modal-content">

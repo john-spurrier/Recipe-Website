@@ -6,8 +6,10 @@ import './Modal.css';
 
 function Search() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [results, setResults] = useState([]);
-  const [ingredients, setIngredients] = useState(['orange','celery']);
+  const [ingredients, setIngredients] = useState([]);
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -25,8 +27,7 @@ function Search() {
   };
 
   const handleSearch = async () => {
-    console.log("ENTERING HANDLESEARCH()");
-    // Implement your search logic here
+    console.log("ENTERING HANDLESEARCH()");    
     try{
       const response = await axios.post('http://localhost:3001/api/query', ingredients);
 
@@ -66,16 +67,76 @@ function Search() {
     setSelectedItem(null);
   };
 
+  const addToList = () => {
+    setIngredients((ingre) => [...ingre, searchTerm]);
+    console.log(ingredients);
+  }
+
+  const handleInputChange = (event) => {
+    const inputV = event.target.value;
+    setSearchTerm(inputV);
+
+    const suggestions = getSuggestions(inputV);
+    setSuggestions(suggestions);
+
+    setShowSuggestions(inputV !== '');
+  }
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion);
+    setShowSuggestions(false);
+  }
+
+  const getSuggestions = (inputV) => {
+    const suggestionsList = [
+      'apple','banana','chicken','orange','celery','cherry','tomato','potato','onion','lettuce','cabbage',
+    ];
+    return suggestionsList.filter((item) => 
+      item.toLowerCase().includes(inputV.toLowerCase())
+    );
+  };
+
   return (
-    <div>
+    <div> 
       <h1>EasyCooks</h1>
       <input
         type="text"
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange = {handleInputChange}
         placeholder="Search..."
       />
-      <button onClick={handleSearch}>Search</button>
+      {showSuggestions && (
+        <ul
+          style = {{
+            position: 'absolute',
+            zIndex: 1,
+            backgroundColor: 'white',
+            border: '1px solid #ccc',
+            padding: '5px',
+            listStyle: 'none',
+            margin: 0,
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
+            borderRadius: '4px',
+            width: '200px',
+          }}
+          >
+          {suggestions.map((suggestion, index) => (
+            <li
+            key = {index}
+            style = {{
+              padding: '5px',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s',
+            }}
+            onClick = {() => handleSuggestionClick(suggestion)}
+            >
+              {suggestion}
+            </li>
+          ))}
+        </ul>
+      )}
+      <button onClick = {addToList}>Add</button>
+      <button onClick={handleSearch}>Search Recipes</button>
       <div className="filters">
         <button
           onClick={() => toggleFilter('glutenFree')}
@@ -123,6 +184,6 @@ function Search() {
       )}
     </div>
   );
-}
+};
 
 export default Search;

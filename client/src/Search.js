@@ -1,18 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import Modal from './Modal';
 import './styles.css';
-import './Modal.css';
 
 function Search() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [results, setResults] = useState([]);
-  const [ingredients, setIngredients] = useState([]);
-  const itemsPerPage = 10;
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [searchHistory, setSearchHistory] = useState([]);
   const [filters, setFilters] = useState({
     glutenFree: false,
     keto: false,
@@ -27,22 +19,21 @@ function Search() {
   };
 
   const handleSearch = async () => {
-    console.log("ENTERING HANDLESEARCH()");    
-    console.log(filters.glutenFree);
-    try{
-      const response = await axios.post('http://localhost:3001/api/query', {
-        ingredients, 
-        filters: {
-          glutenFree: filters.glutenFree,
-          keto: filters.keto,
-          nutAllergy: filters.nutAllergy,
-        },
-      });
+    // Your search logic here
+    // ...
 
-      setResults(response.data);
-      console.log(results);
-    } catch(error){
-      console.error(error);
+  }
+  const addIngredient = async() => {
+    if (searchTerm.trim() !== '') {
+      setSearchHistory((prevHistory) => [searchTerm, ...prevHistory]);
+
+      // Clear the search term input
+      setSearchTerm('');
+    }
+  }
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      addIngredient(); // Call handleSearch when Enter is pressed
     }
   }
   const handleGFClick = () => {
@@ -57,95 +48,43 @@ function Search() {
     // Implement functionality for Nut Allergy filter
   };
 
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = results.slice(startIndex,endIndex);
-  const totalpages = Math.ceil(results.length / itemsPerPage);
-
-  const goToPage = (page) => {
-    setCurrentPage(page);
-  }
-
-  const openModal = (item) => {
-    setSelectedItem(item);
-  };
-
-  const closeModal = () => {
-    setSelectedItem(null);
-  };
-
-  const addToList = () => {
-    setIngredients((ingre) => [...ingre, searchTerm]);
-    console.log(ingredients);
-  }
-
-  const handleInputChange = (event) => {
-    const inputV = event.target.value;
-    setSearchTerm(inputV);
-
-    const suggestions = getSuggestions(inputV);
-    setSuggestions(suggestions);
-
-    setShowSuggestions(inputV !== '');
-  }
-
-  const handleSuggestionClick = (suggestion) => {
-    setSearchTerm(suggestion);
-    setShowSuggestions(false);
-  }
-
-  const getSuggestions = (inputV) => {
-    const suggestionsList = [
-      'apple','banana','chicken','orange','celery','cherry','tomato','potato','onion','lettuce','cabbage',
-    ];
-    return suggestionsList.filter((item) => 
-      item.toLowerCase().includes(inputV.toLowerCase())
-    );
-  };
-
   return (
-    <div> 
+    <div>
       <h1>EasyCooks</h1>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange = {handleInputChange}
-        placeholder="Search..."
-      />
-      {showSuggestions && (
-        <ul
-          style = {{
-            position: 'absolute',
-            zIndex: 1,
-            backgroundColor: 'white',
-            border: '1px solid #ccc',
-            padding: '5px',
-            listStyle: 'none',
-            margin: 0,
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
-            borderRadius: '4px',
-            width: '200px',
+      <div className="search-container">
+        <div className="search-input">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => {
+          if (e.target.value.length <= 26) {
+            setSearchTerm(e.target.value);
+          }
           }}
-          >
-          {suggestions.map((suggestion, index) => (
-            <li
-            key = {index}
-            style = {{
-              padding: '5px',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s',
-            }}
-            onClick = {() => handleSuggestionClick(suggestion)}
-            >
-              {suggestion}
-            </li>
+          onKeyPress={handleKeyPress}
+          placeholder="Add Ingredients Here"
+          maxLength={26} // Set the maximum length to 26 characters
+          />
+          <button onClick={addIngredient}>Add</button>
+        </div>
+        <div className="search-results">
+          {results.map((result) => (
+            <div key={result.id} className="result-item">
+              {result.name}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="search-history-container">
+        <div className="search-history">
+        <h2>Ingredients <button onClick={handleSearch}>Search</button> </h2>
+        <ul>
+          {searchHistory.map((term, index) => (
+            <li key={index}>{term}</li>
           ))}
         </ul>
-      )}
-      <button onClick = {addToList}>Add</button>
-      <button onClick={handleSearch}>Search Recipes</button>
-      <div className="filters">
+        </div>
+        <div className="buttons-container">
         <button
           onClick={() => toggleFilter('glutenFree')}
           className={filters.glutenFree ? 'filter-button active' : 'filter-button'}
@@ -165,33 +104,9 @@ function Search() {
           Nut Allergy
         </button>
       </div>
-      {results.length > 0 && (
-        <div>
-          <ul>
-            {currentItems.map((item,index) => (
-              <li key = {index} className = "smallText"> 
-                {item[0]} - {item[7]} 
-                <button onClick = {() => openModal(item)}> Show Details </button>
-              </li>
-            ))}
-          </ul>
-
-          <div>
-            <button onClick={() => goToPage(currentPage - 1)} disabled = {currentPage === 1}>
-              Previous
-            </button>
-            <span>Page {currentPage} of {totalpages} </span>
-            <button onClick = {() => goToPage(currentPage + 1)} disabled = {currentPage === totalpages}>
-              Next
-            </button>
-          </div>
-        </div>
-      )}
-      {selectedItem && (
-        <Modal item = {selectedItem} onClose={closeModal}/>
-      )}
+      </div>
     </div>
   );
-};
+}
 
 export default Search;

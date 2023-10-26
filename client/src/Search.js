@@ -92,6 +92,12 @@ function Search() {
     console.log(ingredients);
   }
 
+  const removeFromList = () => {
+    setIngredients([]); // Clear the ingredients list
+    setSearchHistory([]);
+    console.log(ingredients); // This will log an empty array
+  }
+
   const handleInputChange = (event) => {
     const inputV = event.target.value;
     setSearchTerm(inputV);
@@ -191,7 +197,7 @@ function Search() {
           ))}
         </ul>
         </div>
-		
+        <button className='clear-list-button' onClick={removeFromList}>Clear</button>
 		
         <div className="buttons-container">
         <button

@@ -39,6 +39,14 @@
   border: 1px solid #007bff;
 }
 
+.clear-list-button{
+  align-items: center;
+  display: flex;
+  justify-content: center;
+    margin-bottom: auto;
+
+}
+
 /* Center the container */
 .container {
     display: flex;

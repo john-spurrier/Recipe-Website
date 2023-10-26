@@ -162,8 +162,8 @@ function Search() {
           ))}
         </ul>
       )}
-      <div className="content-container">
       <button onClick = {addToList}>Add</button>
+      <div className="content-container">
       {results.length > 0 && (
         <div>
           <ul>

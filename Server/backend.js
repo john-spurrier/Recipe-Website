@@ -17,11 +17,11 @@ function createQuery(ingredientsArray, allergenFilters) {
   console.log("Creating Query...");
   const {glutenFree, keto, nutAllergy} = allergenFilters;
   console.log("Gluten Free: ", glutenFree, "\t Keto: ", keto, "\t Nut Allergy: ", nutAllergy);
-  let Query = 'SELECT * FROM RECIPES WHERE INGREDIENTS LIKE ';
+  let Query = 'SELECT * FROM RECIPES';
 
     for(i = 0; i < ingredientsArray.length; i++) {
       if(i == 0) { // first query
-        Query = Query.concat('\'%', ingredientsArray[0], '%\'');
+        Query = Query.concat(' WHERE INGREDIENTS LIKE ', '\'%', ingredientsArray[0], '%\'');
       }
       else {
         Query = Query.concat(' AND INGREDIENTS LIKE \'%', ingredientsArray[i], '%\'');
@@ -32,6 +32,9 @@ function createQuery(ingredientsArray, allergenFilters) {
     // Allergen Limitations
     if(glutenFree == true) {
       for(i = 0; i < GF.length; i++) {
+        if(ingredientsArray.length < 1 && i == 0)
+        Query = Query.concat(' WHERE INGREDIENTS NOT LIKE \'%', GF[i], '%\'');
+      else
         Query = Query.concat(' AND INGREDIENTS NOT LIKE \'%', GF[i], '%\'');
       }
     }

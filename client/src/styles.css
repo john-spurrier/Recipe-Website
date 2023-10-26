@@ -130,3 +130,7 @@
   .button {
     margin: 5px; /* Add some spacing between the buttons */
   }
+
+  .content-container {
+    padding-left: 300px;
+  }

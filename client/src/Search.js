@@ -162,6 +162,7 @@ function Search() {
           ))}
         </ul>
       )}
+      <div className="content-container">
       <button onClick = {addToList}>Add</button>
       {results.length > 0 && (
         <div>
@@ -185,6 +186,7 @@ function Search() {
           </div>
         </div>
       )}
+      </div>
       {selectedItem && (
         <Modal item = {selectedItem} onClose={closeModal}/>
       )}

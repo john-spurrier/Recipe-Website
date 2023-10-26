@@ -30,8 +30,14 @@ function Search() {
   const handleSearch = async () => {
     console.log("ENTERING HANDLESEARCH()");    
     try{
-      const response = await axios.post('http://localhost:3001/api/query', ingredients);
-
+      const response = await axios.post('http://localhost:3001/api/query', {
+        ingredients, 
+        filters: {
+          glutenFree: filters.glutenFree,
+          keto: filters.keto,
+          nutAllergy: filters.nutAllergy,
+        },
+      });
       setResults(response.data);
       console.log(results);
     } catch(error){

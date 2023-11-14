@@ -115,7 +115,10 @@ function Search() {
 
   const getSuggestions = (inputV) => {
     const suggestionsList = [
-      'apple','banana','chicken','orange','celery','cherry','tomato','potato','onion','lettuce','cabbage',
+      'apple','banana','chicken','orange','celery','cherry','tomato','potato','onion','lettuce','cabbage','water',
+      'brown sugar', 'plums', 'pineapple', 'apricots', 'cinnamon', 'yogurt', 'salad dressing', 'cottage cheese', 
+      'strawberry', 'coconut', 'sugar', 'oil', 'nuts', 'butter', 'milk', 'vanilla', 'flour', 'grapefruit', 'kiwi',
+      'lemon', 'pecans', 'mint', 'raspberry', 'marshmallows', 'peach', 'broccoli', 'basil',
     ];
     return suggestionsList.filter((item) => 
       item.toLowerCase().includes(inputV.toLowerCase())
@@ -162,7 +165,7 @@ function Search() {
           ))}
         </ul>
       )}
-      <button onClick = {addToList}>Add</button>
+      <button onClick = {addToList}>Add Ingredient</button>
       <div className="content-container">
       {results.length > 0 && (
         <div>
@@ -206,7 +209,7 @@ function Search() {
           onClick={() => toggleFilter('glutenFree')}
           className={filters.glutenFree ? 'filter-button active' : 'filter-button'}
         >
-          GF
+          Gluten Free
         </button>
         <button
           onClick={() => toggleFilter('keto')}

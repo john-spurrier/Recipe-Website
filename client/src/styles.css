@@ -43,7 +43,7 @@
   align-items: center;
   display: flex;
   justify-content: center;
-    margin-bottom: auto;
+  margin-bottom: auto;
 
 }
 
@@ -131,7 +131,12 @@
     display: flex;
   }
   
-
+  .ingredient-list {
+    align-items: left;
+    display: flex;
+    justify-content: left;
+    margin-bottom: auto;
+  }
   
 
   

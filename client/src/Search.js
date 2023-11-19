@@ -5,15 +5,11 @@ import './styles.css';
 import './Modal.css';
 
 function Search() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const [results, setResults] = useState([]);
   const [ingredients, setIngredients] = useState([]);
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [searchHistory, setSearchHistory] = useState([]);
   const [filters, setFilters] = useState({
     glutenFree: false,
     keto: false,
@@ -45,11 +41,6 @@ function Search() {
     }
   }
   
-    const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      addToList(); // Call handleSearch when Enter is pressed
-    }
-  }
   
   const handleGFClick = () => {
     // Implement functionality for Gluten-Free filter
@@ -81,91 +72,35 @@ function Search() {
     setSelectedItem(null);
   };
 
-  const addToList = () => {
-	  if (searchTerm.trim() !== '') {
-      setSearchHistory((prevHistory) => [searchTerm, ...prevHistory]);
+  const handleIngredientChange = (e) => {
+    const { value, checked } = e.target;
 
-      // Clear the search term input
-      setSearchTerm('');
+    if (checked) {
+      // Add ingredient to the list
+      console.log(`Adding ${value} to ingredients`);
+      setIngredients((prevIngredients) => [...prevIngredients, value]);
+      console.log('Added ', ingredients);
+    } else {
+      // Remove ingredient from the list
+      console.log('removing');
+      setIngredients((prevIngredients) =>
+        prevIngredients.filter((ingredient) => ingredient !== value)
+      );
+      console.log('removed');
     }
-    setIngredients((ingre) => [...ingre, searchTerm]);
-    console.log(ingredients);
-  }
-
-  const removeFromList = () => {
-    setIngredients([]); // Clear the ingredients list
-    setSearchHistory([]);
-    console.log(ingredients); // This will log an empty array
-  }
-
-  const handleInputChange = (event) => {
-    const inputV = event.target.value;
-    setSearchTerm(inputV);
-
-    const suggestions = getSuggestions(inputV);
-    setSuggestions(suggestions);
-
-    setShowSuggestions(inputV !== '');
-  }
-
-  const handleSuggestionClick = (suggestion) => {
-    setSearchTerm(suggestion);
-    setShowSuggestions(false);
-  }
-
-  const getSuggestions = (inputV) => {
-    const suggestionsList = [
-      'apple','banana','chicken','orange','celery','cherry','tomato','potato','onion','lettuce','cabbage','water',
-      'brown sugar', 'plums', 'pineapple', 'apricots', 'cinnamon', 'yogurt', 'salad dressing', 'cottage cheese', 
-      'strawberry', 'coconut', 'sugar', 'oil', 'nuts', 'butter', 'milk', 'vanilla', 'flour', 'grapefruit', 'kiwi',
-      'lemon', 'pecans', 'mint', 'raspberry', 'marshmallows', 'peach', 'broccoli', 'basil',
-    ];
-    return suggestionsList.filter((item) => 
-      item.toLowerCase().includes(inputV.toLowerCase())
-    );
   };
+
+
+  const ingredientsList = [
+    'Chicken', 'Beef', 'Pork', 'Tofu', 'Cheese',
+    'Tomato', 'Rice', 'Flour', 'Sugar', 'Water', 
+    'Potato', 'Milk', 'Butter','Bread', 'Salt', 
+    'Pepper', 'Cherry', 'Oil', 'Nuts', 'Yogurt'];
 
   return (
     <div> 
       <h1>EasyCooks</h1>
-      <input
-        type="text"
-        value={searchTerm}
-        onChange = {handleInputChange}
-        onKeyPress={handleKeyPress}
-        placeholder="Add Ingredients Here"
-      />
-      {showSuggestions && (
-        <ul
-          style = {{
-            position: 'absolute',
-            zIndex: 1,
-            backgroundColor: 'white',
-            border: '1px solid #ccc',
-            padding: '5px',
-            listStyle: 'none',
-            margin: 0,
-            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
-            borderRadius: '4px',
-            width: '200px',
-          }}
-          >
-          {suggestions.map((suggestion, index) => (
-            <li
-            key = {index}
-            style = {{
-              padding: '5px',
-              cursor: 'pointer',
-              transition: 'background-color 0.2s',
-            }}
-            onClick = {() => handleSuggestionClick(suggestion)}
-            >
-              {suggestion}
-            </li>
-          ))}
-        </ul>
-      )}
-      <button onClick = {addToList}>Add Ingredient</button>
+      
       <div className="content-container">
       {results.length > 0 && (
         <div>
@@ -196,14 +131,26 @@ function Search() {
 	   <div className="search-history-container">
         <div className="search-history">
         <h2>Ingredients <button onClick={handleSearch}>Search</button> </h2>
-        <ul>
-          {searchHistory.map((term, index) => (
-            <li key={index}>{term}</li>
-          ))}
-        </ul>
         </div>
-        <button className='clear-list-button' onClick={removeFromList}>Clear</button>
-		
+        <div className="ingredient-list">
+        <form>
+        {ingredientsList.map((ingredient, index) => {
+          const lowercaseIngredient = ingredient.toLowerCase();
+          return (
+            <div key={index}>
+              <input
+                type="checkbox"
+                id={`ingredient_${index}`}
+                value={lowercaseIngredient} // Assigning lowercase value
+                onChange={handleIngredientChange}
+                checked={ingredients.includes(lowercaseIngredient)}
+              />
+              <label htmlFor={`ingredient_${index}`}>{ingredient}</label>
+            </div>
+          );
+        })}
+      </form>
+        </div>
         <div className="buttons-container">
         <button
           onClick={() => toggleFilter('glutenFree')}

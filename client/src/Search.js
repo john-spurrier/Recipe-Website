@@ -10,11 +10,21 @@ function Search() {
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [clickedIngredients, setClickedIngredients] = useState([]);
   const [filters, setFilters] = useState({
     glutenFree: false,
     keto: false,
     nutAllergy: false,
   });
+
+  const setBackgroundColor = () => {
+    document.body.style.backgroundColor = 'White';
+  };
+
+  // Call setBackgroundColor when the component mounts
+  React.useEffect(() => {
+    setBackgroundColor();
+  }, []);
 
   const toggleFilter = (filter) => {
     setFilters({
@@ -40,20 +50,6 @@ function Search() {
       console.error(error);
     }
   }
-  
-  
-  const handleGFClick = () => {
-    // Implement functionality for Gluten-Free filter
-  };
-
-  const handleKetoClick = () => {
-    // Implement functionality for Keto filter
-  };
-
-  const handleNutAllergyClick = () => {
-    // Implement functionality for Nut Allergy filter
-  };
-
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -79,12 +75,18 @@ function Search() {
       // Add ingredient to the list
       console.log(`Adding ${value} to ingredients`);
       setIngredients((prevIngredients) => [...prevIngredients, value]);
+      // Add ingredient to clickedIngredients for tracking clicked state
+      setClickedIngredients((prevClickedIngredients) => [...prevClickedIngredients, value]);
       console.log('Added ', ingredients);
     } else {
       // Remove ingredient from the list
       console.log('removing');
       setIngredients((prevIngredients) =>
         prevIngredients.filter((ingredient) => ingredient !== value)
+      );
+      // Remove ingredient from clickedIngredients for tracking clicked state
+      setClickedIngredients((prevClickedIngredients) =>
+        prevClickedIngredients.filter((ingredient) => ingredient !== value)
       );
       console.log('removed');
     }
@@ -107,7 +109,7 @@ function Search() {
           <ul>
             {currentItems.map((item,index) => (
               <li key = {index} className = "smallText"> 
-                {item[0]} - {item[7]} 
+                {item[0]}
                 <button onClick = {() => openModal(item)}> Show Details </button>
               </li>
             ))}
@@ -132,25 +134,35 @@ function Search() {
         <div className="search-history">
         <h2>Ingredients <button onClick={handleSearch}>Search</button> </h2>
         </div>
+
         <div className="ingredient-list">
         <form>
-        {ingredientsList.map((ingredient, index) => {
-          const lowercaseIngredient = ingredient.toLowerCase();
-          return (
-            <div key={index}>
-              <input
-                type="checkbox"
+          {ingredientsList.map((ingredient, index) => {
+            const lowercaseIngredient = ingredient.toLowerCase();
+            return (
+              <button
+                key={index}
                 id={`ingredient_${index}`}
-                value={lowercaseIngredient} // Assigning lowercase value
-                onChange={handleIngredientChange}
-                checked={ingredients.includes(lowercaseIngredient)}
-              />
-              <label htmlFor={`ingredient_${index}`}>{ingredient}</label>
-            </div>
-          );
-        })}
-      </form>
-        </div>
+                className={`ingredient-button ${
+                  clickedIngredients.includes(lowercaseIngredient) ? 'clicked' : ''
+                }`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  handleIngredientChange({
+                    target: {
+                      value: lowercaseIngredient,
+                      checked: !ingredients.includes(lowercaseIngredient),
+                    },
+                  });
+                }}
+              >
+                {ingredient}
+              </button>
+            );
+          })}
+        </form>
+      </div>
+
         <div className="buttons-container">
         <button
           onClick={() => toggleFilter('glutenFree')}

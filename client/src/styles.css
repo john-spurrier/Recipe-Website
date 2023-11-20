@@ -1,6 +1,6 @@
 /* Styles for the left rectangle containing search history */
 .search-history-container {
-  background-color: #f5f5f5;
+  background-color: #eaeaea;
   padding: 20px;
   width: 250px;
   height: 100vh;
@@ -86,7 +86,7 @@
   button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007bff;
+    background-color: #ec9a8d;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -145,5 +145,22 @@
   }
 
   .content-container {
-    padding-left: 300px;
+    padding-left: 000px;
+  }
+
+  .ingredient-button {
+    /* Add your default button styles here */
+    background-color: #ddd; /* Light gray color for unselected ingredients */
+    color: black;
+    margin: 4px; /* Add margin for spacing between buttons */
+    padding: 6px 12px; /* Adjust padding for a slightly smaller button size */
+    font-size: 14px; /* Adjust font size for a slightly smaller button */
+    cursor: pointer; /* Add pointer cursor to indicate interactivity */
+    border: none; /* Remove button border */
+  }
+  
+  .ingredient-button.clicked {
+    /* Add your clicked button styles here */
+    background-color: #666; /* Darker color for selected ingredients */
+    color: white;
   }

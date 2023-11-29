@@ -32,6 +32,7 @@ function IntroPage() {
     <div className="container" style = {containerStyle}>
       <h1>Welcome to Easy Cooks</h1>
       <p>Discover delicious recipes and simplify your cooking experience.</p>
+      <p> Created by: Steven Hu, Jordan Insinger, John Spurrier</p>
       <Link to="/mainpage">
         <button style = {buttonStyle}>Start Here!</button>
       </Link>

@@ -110,7 +110,9 @@ function Search() {
             {currentItems.map((item,index) => (
               <li key = {index} className = "smallText"> 
                 {item[0]}
+                
                 <button onClick = {() => openModal(item)}> Show Details </button>
+               
               </li>
             ))}
           </ul>

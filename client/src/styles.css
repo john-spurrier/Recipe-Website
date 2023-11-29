@@ -92,6 +92,8 @@
     cursor: pointer;
   }
   
+
+
   /* Style the search results container */
   .search-results {
     margin-top: 20px;
@@ -148,6 +150,10 @@
     padding-left: 000px;
   }
 
+  .content-container button{
+    padding: 3px 6px;
+    margin: 4px;
+  }
   .ingredient-button {
     /* Add your default button styles here */
     background-color: #ddd; /* Light gray color for unselected ingredients */

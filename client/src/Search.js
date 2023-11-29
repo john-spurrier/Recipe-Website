@@ -97,7 +97,12 @@ function Search() {
     'Chicken', 'Beef', 'Pork', 'Tofu', 'Cheese',
     'Tomato', 'Rice', 'Flour', 'Sugar', 'Water', 
     'Potato', 'Milk', 'Butter','Bread', 'Salt', 
-    'Pepper', 'Cherry', 'Oil', 'Nuts', 'Yogurt'];
+    'Pepper', 'Cherry', 'Oil', 'Nuts', 'Yogurt',
+    'Capers', 'Mushroom', 'Eggs', 'Bacon', 'Garlic',
+    'Onion', 'Honey', 'Spinach', 'Lemon', 'Carrots',
+    'Soy Sauce', 'Cinanamon', 'Ham', 'Vanilla', 'Pumpkin',
+    'Whipping Cream', 'Beets', 'Zucchini', 'Peas', 'Vinegar',
+    'Baking Powder', 'Mayonnaise'];
 
   return (
     <div> 

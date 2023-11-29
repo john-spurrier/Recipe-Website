@@ -8,7 +8,7 @@ const MainPage = () => {
   return (
     <div className="container">
       <Link to="/saved" className="saved-button">
-        Go to Saved
+        Go to Saved Recipes
       </Link>
       {<Search />}
     </div>

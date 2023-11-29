@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import Modal from "./Modal";
 import './Modal.css';
+import { Link } from 'react-router-dom';
+import './styles.css';
 function Saved() {
   // You can fetch the saved recipes or load them from a state or storage
   const [savedRecipes, setSavedRecipes] = useState([]);
@@ -21,6 +23,9 @@ function Saved() {
 
   return (
     <div className='container'>
+      <Link to="/mainpage" className="saved-button">
+        Go to Search
+      </Link>
       <h1>Saved Recipes</h1>
       <div className = "saved-recipe-container">
         <div>

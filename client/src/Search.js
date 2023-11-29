@@ -7,7 +7,7 @@ import './Modal.css';
 function Search() {
   const [results, setResults] = useState([]);
   const [ingredients, setIngredients] = useState([]);
-  const itemsPerPage = 10;
+  const itemsPerPage = 16;
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedItem, setSelectedItem] = useState(null);
   const [clickedIngredients, setClickedIngredients] = useState([]);
